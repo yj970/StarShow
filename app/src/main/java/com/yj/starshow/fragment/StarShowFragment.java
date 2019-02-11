@@ -26,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -100,6 +102,8 @@ public class StarShowFragment extends Fragment {
                 break;
         }
 
+        sort(list);
+
         adapter = new StarShowAdapter(list);
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.addItemDecoration(new RecyclerItemDecoration(getActivity()));
@@ -109,6 +113,32 @@ public class StarShowFragment extends Fragment {
             @Override
             public void onLongClick(int position) {
                 showDeleteDialog(position);
+            }
+        });
+    }
+
+    /**
+     * 冒泡排序, 播放时间早的在前面
+     *
+     * @param list
+     */
+    private void sort(StartShowList list) {
+        if (list == null) {
+            return;
+        }
+        Collections.sort(list.getList(), new Comparator<StarShow>() {
+            @Override
+            public int compare(StarShow o1, StarShow o2) {
+                long t1 = o1.getTime().getTime();
+                long t2 = o2.getTime().getTime();
+                long diff = t1 - t2;
+                if (diff > 0) {
+                    return 1;
+                } else if (diff < 0) {
+                    return -1;
+                }
+                // 相等
+                return 0;
             }
         });
     }
@@ -125,7 +155,7 @@ public class StarShowFragment extends Fragment {
                 .setPositiveClickListener(new MaterialDialog.IPositiveClickListener() {
                     @Override
                     public void onPositiveClickListener() {
-                       SpUtil.delete(list.getList().get(position));
+                        SpUtil.delete(list.getList().get(position));
                         EventBus.getDefault().post(new RefreshEvent());
                     }
                 }).create().show();
