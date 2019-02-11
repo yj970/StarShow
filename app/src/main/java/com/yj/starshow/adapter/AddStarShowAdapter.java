@@ -4,8 +4,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,7 +46,7 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder viewHolder,final int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         String str = list.get(i);
         if (!TextUtils.isEmpty(str)) {
             viewHolder.et.setVisibility(View.GONE);
@@ -51,6 +55,17 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
             viewHolder.tv.setVisibility(View.GONE);
             viewHolder.et.setVisibility(View.VISIBLE);
         }
+
+        //  设置edittext中hint的字体大小
+        // 新建一个可以添加文本的对象
+        SpannableString ss = new SpannableString("其他");
+        // 设置文本字体大小
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(12, true);
+        // 将字体大小附加到文本的属性
+        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // 设置hint属性
+        viewHolder.et.setHint(new SpannedString(ss));//转码
+
         viewHolder.tv.setText(str);
 
         viewHolder.et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -65,7 +80,7 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
             }
         });
 
-        if(selectPosition == i) {
+        if (selectPosition == i) {
             viewHolder.et.requestFocus();
             // 弹出软键盘
             viewHolder.et.postDelayed(new Runnable() {
@@ -77,7 +92,6 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
             }, 200);
 
         }
-
 
 
         viewHolder.et.addTextChangedListener(new TextWatcher() {
@@ -137,6 +151,7 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
         EditText et;
         @BindView(R.id.fl)
         FrameLayout fl;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
