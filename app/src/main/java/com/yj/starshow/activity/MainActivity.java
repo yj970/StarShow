@@ -1,5 +1,6 @@
 package com.yj.starshow.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,6 +16,8 @@ import com.yj.starshow.adapter.WeekAdapter;
 import com.yj.starshow.enums.WeekEnum;
 import com.yj.starshow.event.RefreshEvent;
 import com.yj.starshow.fragment.StarShowFragment;
+import com.yj.starshow.service.NotifyService;
+import com.yj.starshow.utils.CommonUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
+
+        startService();
 
         // TOP
         weekAdapter = new WeekAdapter(this);
@@ -100,8 +105,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 切换到当前日期
-        int nowWeek = getNowWeek();
+        int nowWeek = CommonUtil.getNowWeek();
         vp.setCurrentItem(nowWeek);
+    }
+
+    private void startService() {
+        Intent intent = new Intent(this, NotifyService.class);
+        startService(intent);
     }
 
 
@@ -112,19 +122,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // 获取今天是星期几
-
-    /**
-     * 代表星期几，0=星期日，1=星期一，2=星期二，3=星期三，4=星期四，5=星期五，6=星期六
-     * @return
-     */
-    private int getNowWeek() {
-        Calendar calendar;
-        calendar = Calendar.getInstance();
-        String week;
-        week = calendar.get(calendar.DAY_OF_WEEK) - 1 + "";
-        return Integer.parseInt(week);
-    }
 
     //点击事件
     @Override
@@ -144,5 +141,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        stopService();
+    }
+
+    private void stopService() {
+        Intent intent = new Intent(this, NotifyService.class);
+        stopService(intent);
     }
 }

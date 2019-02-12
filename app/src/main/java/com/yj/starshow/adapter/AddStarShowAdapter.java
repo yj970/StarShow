@@ -54,6 +54,9 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
         } else {
             viewHolder.tv.setVisibility(View.GONE);
             viewHolder.et.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(etText)) {
+                viewHolder.et.setText(etText);
+            }
         }
 
         //  设置edittext中hint的字体大小
