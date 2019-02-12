@@ -93,6 +93,7 @@ public class AddStarShowActivity extends Activity {
         typeList.add("纪录片");
         typeList.add("电视剧");
         typeList.add("科普知识");
+        typeList.add("测评");
         typeList.add("");
         typeAdapter = new AddStarShowAdapter(typeList, this);
         rvType.setLayoutManager(new GridLayoutManager(this, 4));
