@@ -25,9 +25,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -129,8 +132,19 @@ public class StarShowFragment extends Fragment {
         Collections.sort(list.getList(), new Comparator<StarShow>() {
             @Override
             public int compare(StarShow o1, StarShow o2) {
-                long t1 = o1.getTime().getTime();
-                long t2 = o2.getTime().getTime();
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+                String s1 = formatter.format(o1.getTime());
+                String s2 = formatter.format(o2.getTime());
+
+                long t1 = 0;
+                long t2 = 0;
+                try {
+                    t1 = formatter.parse(s1).getTime();
+                    t2 = formatter.parse(s2).getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 long diff = t1 - t2;
                 if (diff > 0) {
                     return 1;

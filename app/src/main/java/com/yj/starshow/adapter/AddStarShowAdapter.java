@@ -54,7 +54,7 @@ public class AddStarShowAdapter extends RecyclerView.Adapter<AddStarShowAdapter.
         } else {
             viewHolder.tv.setVisibility(View.GONE);
             viewHolder.et.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(etText)) {
+            if (etText != null) {
                 viewHolder.et.setText(etText);
             }
         }
